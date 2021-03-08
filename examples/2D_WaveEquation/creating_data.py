@@ -5,11 +5,7 @@ Created on Sun Mar  7 17:00:55 2021
 @author: 49174
 """
 
-"""
-Created on Sun Mar  7 16:52:17 2021
 
-@author: 49174
-"""
 # data 
 import numpy as np
 from scipy.spatial.distance import euclidean
@@ -31,6 +27,6 @@ Data['x']=x
 Data['y']=y
 Data['t']=time
 Data['velocity']= vptxt
-np.save('seismic_data.npy', Data, allow_pickle=True) 
+ 
 scipy.io.savemat('seismic_data.mat', Data)
 #Data2 = mat = scipy.io.loadmat('seismic_data.mat')

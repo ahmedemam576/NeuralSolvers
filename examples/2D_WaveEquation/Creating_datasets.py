@@ -170,8 +170,18 @@ def derivatives(x, u):
         u_x, x, create_graph=True, grad_outputs=grads)[0]
     u_yy = torch.autograd.grad(
         u_y, x, create_graph=True, grad_outputs=grads)[0]
+    u_tt = torch.autograd.grad(
+        u_t, x, create_graph=True, grad_outputs=grads)[0]
+     
     u_xx = u_xx[:, 0].reshape(u.shape)
     u_yy = u_yy[:, 1].reshape(u.shape)
+    u_tt = u_tt[:, 2].reshape(u.shape)
+    x, y, t = x.T
+    x = x.reshape(u.shape)
+    y = y.reshape(u.shape)
+    t = t.reshape(u.shape)
+
+    return torch.stack([x, y, t, u, u_xx, u_yy, u_tt], 1).squeeze()
                 
                 
         

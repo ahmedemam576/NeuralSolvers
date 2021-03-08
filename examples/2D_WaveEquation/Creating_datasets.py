@@ -126,9 +126,9 @@ class PDEDataset(Dataset):
         for xi in range(
                     0, nx, grid_size):  # sample for each xi
                 for yi in range(0, ny, grid_size): # sample for each yi
-                self.x.append(xi)
-                self.y.append(yi)
-                self.t.append(time[xi,yi])
+                    self.x.append(xi)
+                    self.y.append(yi)
+                    self.t.append(time[xi,yi])
         
          # Convert python lists to numpy arrays
         self.x = np.array(self.x).reshape(-1)

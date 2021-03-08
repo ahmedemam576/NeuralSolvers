@@ -120,6 +120,60 @@ class PDEDataset(Dataset):
         self.y = []
         self.t = []
         data = scipy.io.loadmat(pData)
+        Exact_u= data['velocity']
+        Exact_u= Exact_u.reshape(nx,ny)
+        time = data['t'].reshape(nx,ny)
+        for xi in range(
+                    0, nx, grid_size):  # sample for each xi
+                for yi in range(0, ny, grid_size): # sample for each yi
+                self.x.append(xi)
+                self.y.append(yi)
+                self.t.append(time[xi,yi])
+        
+         # Convert python lists to numpy arrays
+        self.x = np.array(self.x).reshape(-1)
+        self.y = np.array(self.y).reshape(-1)
+        self.t = np.array(self.t).reshape(-1)
+        
+        if (useGPU):  # send to GPU if requested
+            self.dtype = torch.cuda.FloatTensor
+            self.dtype2 = torch.cuda.LongTensor
+        else:
+            self.dtype = torch.FloatTensor
+            self.dtype2 = torch.LongTensor
+    def __len__(self):
+        """
+        Length of the dataset
+        """
+        return 1 #we don't have a patch process
+    def __getitem__(self, index):
+        x = (self.x)
+        y = (self.y)
+        t = (self.t)
+        return torch.stack([x, y, t], 1)
+def derivatives(x, u):
+    """
+    Calculate the nn output at postion (x,y) at time t
+    :param x: position vector containing (x,y,t)
+    :param u: the velocity vector
+    :return: Approximated solutions and their gradients
+    """
+    x.requires_grad = True
+    # Calculate derivatives with torch automatic differentiation
+    # Move to the same device as prediction
+    grads = torch.ones(u.shape, device=u.device)
+    J_U = torch.autograd.grad(u, x, create_graph=True, grad_outputs=grads)[0]
+    u_x = J_U[:, 0].reshape(u.shape)
+    u_y = J_U[:, 1].reshape(u.shape)
+    u_t = J_U[:, 2].reshape(u.shape)
+    u_xx = torch.autograd.grad(
+        u_x, x, create_graph=True, grad_outputs=grads)[0]
+    u_yy = torch.autograd.grad(
+        u_y, x, create_graph=True, grad_outputs=grads)[0]
+    u_xx = u_xx[:, 0].reshape(u.shape)
+    u_yy = u_yy[:, 1].reshape(u.shape)
+                
+                
         
             	
         

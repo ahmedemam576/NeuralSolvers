@@ -110,7 +110,7 @@ class InitalConditionDataset(Dataset):
         return torch.stack([x, y, t], 1), u
     
 class PDEDataset(Dataset):
-    def __init__(self, pData,t_ub, nx=800,
+    def __init__(self, pData, nx=800,
                  ny=800, grid_size=0.0125,useGPU=False):
         """
         Constructor of the residual points dataset

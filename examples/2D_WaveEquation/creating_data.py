@@ -20,6 +20,23 @@ y = np.arange(0,10,0.0125)
 xx, yy = np.meshgrid(x, y, sparse=True)
 distance = np.sqrt(yy**2 + xx**2)
 time = np.divide(distance,vptxt)#add the velocity file instead of vp txt
+import seaborn as sns; sns.set_theme()
+''''
+vel.rename(columns=lambda x: str(x*0.0125)[0:3], inplace=True)
+vel.rename(index=lambda x: str(x*0.0125)[0:3], inplace=True)
+
+ax = sns.heatmap(vel) # create seaborn heatmap
+
+
+plt.title('Velocities in m/s', fontsize = 20) # title with fontsize 20
+plt.xlabel('X in m', fontsize = 15) # x-axis label with fontsize 15
+plt.ylabel('Y in m', fontsize = 15) # y-axis label with fontsize 15
+
+plt.show()
+
+'''
+
+
 
 
 Data= {}

@@ -49,4 +49,20 @@ if __name__ == "__main__":
                           num_hidden=args.num_hidden,
                           lb=ic_dataset.lb[:3], #lb for x,y,t
                           ub=ic_dataset.ub[:3]) #ub for x,y,t
-    
+    #HPM model: u_tt = c_net*(u_xx + u_yy)
+    c_net.cuda()
+    hpm_model = pf.models.MultiModelHPM(c_net)
+    hpm_loss = pf.HPMLoss.HPMLoss(pde_dataset, derivatives, hpm_model)
+    pinn = pf.PINN(
+        model,
+        input_dimension=6,
+        output_dimension=1,
+        pde_loss=hpm_loss,
+        initial_condition=initial_condition,
+        boundary_condition=None,
+        use_gpu=args.use_gpu,
+        use_horovod=False,
+        use_wandb=True,
+        project_name='2DWaveEquaion')
+
+    pinn.fit(args.epochs, 'Adam', args.learning_rate)

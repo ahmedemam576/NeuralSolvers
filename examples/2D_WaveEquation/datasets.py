@@ -64,12 +64,12 @@ class InitialConditionDataset(Dataset):
         for ti in range(0,len(time),1):
             for xi in range(0,len(x),1):
                 for zi in range(0,len(z),1):
-                self.u_values.append(u_exact[xi, yi])
-                self.x_values.append(x[xi])
-                self.z_values.append(z[zi])
-                self.t_values.append(time[ti])
-                self.x_indices.append(xi)
-                self.z_indices.append(zi)
+                    self.u_values.append(u_exact[xi, yi])
+                    self.x_values.append(x[xi])
+                    self.z_values.append(z[zi])
+                    self.t_values.append(time[ti])
+                    self.x_indices.append(xi)
+                    self.z_indices.append(zi)
                 
             
                         
@@ -132,46 +132,44 @@ class InitialConditionDataset(Dataset):
         self.up_bound = dtype1(self.up_bound)
         
         def cuda(self):
-        """
-        Sends the dataset to GPU
-        """        
-        self.x_values = self.x_values.cuda()
-        self.z_values = self.y_values.cuda()
-        self.t_values = self.t_values.cuda() 
-        self.u_values = self.u_values.cuda()
-        self.x_indices = self.x_indices.cuda()
-        self.z_indices = self.y_indices.cuda()
+            
+            self.x_values = self.x_values.cuda()
+            self.z_values = self.y_values.cuda()
+            self.t_values = self.t_values.cuda() 
+            self.u_values = self.u_values.cuda()
+            self.x_indices = self.x_indices.cuda()
+            self.z_indices = self.y_indices.cuda()
 
-    def __len__(self):
-        """
-        Length of the dataset
-        """
-        return self.num_batches
-    
-    
-    def __getitem__(self, index):
-        """
-        Returns a mini-batch at given index containing X,u
-        Args:
-            index(int): index of the mini-batch
-        Returns:
-            X: spatio-temporal coordinates x,z,t concatenated
-            u: real-value function of spatio-temporal coordinates
-        """
-        # Generate batch for inital solution
-        x_values = (
-            self.x_values[index * self.batch_size: (index + 1) * self.batch_size])
-        z_values = (
-            self.z_values[index * self.batch_size: (index + 1) * self.batch_size])
-        t_values = (
-            self.t_values[index * self.batch_size: (index + 1) * self.batch_size])
-        u_values = (
-            self.u_values[index * self.batch_size: (index + 1) * self.batch_size])
-        x_indices = (
-            self.x_indices[index * self.batch_size: (index + 1) * self.batch_size])
-        z_indices = (
-            self.z_indices[index * self.batch_size: (index + 1) * self.batch_size])
-        return torch.stack([x_values, z_values, t_values, x_indices, z_indices], 1),u_values.reshape(-1,1)
+        def __len__(self):
+            """
+            Length of the dataset
+            """
+            return self.num_batches
+
+
+        def __getitem__(self, index):
+            """
+            Returns a mini-batch at given index containing X,u
+            Args:
+                index(int): index of the mini-batch
+            Returns:
+                X: spatio-temporal coordinates x,z,t concatenated
+                u: real-value function of spatio-temporal coordinates
+            """
+            # Generate batch for inital solution
+            x_values = (
+                self.x_values[index * self.batch_size: (index + 1) * self.batch_size])
+            z_values = (
+                self.z_values[index * self.batch_size: (index + 1) * self.batch_size])
+            t_values = (
+                self.t_values[index * self.batch_size: (index + 1) * self.batch_size])
+            u_values = (
+                self.u_values[index * self.batch_size: (index + 1) * self.batch_size])
+            x_indices = (
+                self.x_indices[index * self.batch_size: (index + 1) * self.batch_size])
+            z_indices = (
+                self.z_indices[index * self.batch_size: (index + 1) * self.batch_size])
+            return torch.stack([x_values, z_values, t_values, x_indices, z_indices], 1),u_values.reshape(-1,1)
     
     
     
@@ -213,12 +211,12 @@ class PDEDataset(Dataset):
         for t_i in range(0,data_info["num_t"],1):
             for x_i in range(0,data_info["num_x"],1):
                 for z_i in range(0,data_info["num_z"],1):
-                self.u.append(Exact_u[ti,xi, zi])
-                self.x_values.append(x[x_i])
-                self.y_values.append(z[z_i])
-                self.t_values.append(time[t_i])
-                self.x_indices.append(xi)
-                self.z_indices.append(zi)
+                    self.u.append(Exact_u[ti,xi, zi])
+                    self.x_values.append(x[x_i])
+                    self.y_values.append(z[z_i])
+                    self.t_values.append(time[t_i])
+                    self.x_indices.append(xi)
+                    self.z_indices.append(zi)
           
             
             
@@ -272,9 +270,6 @@ class PDEDataset(Dataset):
         
         def cuda(self):
             
-        """
-        Sends the dataset to GPU
-        """        
             self.x_values = self.x_values.cuda()
             self.z_values = self.z_values.cuda()
             self.t_values = self.t_values.cuda() 
@@ -282,20 +277,13 @@ class PDEDataset(Dataset):
             self.z_indices = self.z_indices.cuda()
         
         
-         def __len__(self):
-        """
-        Length of the dataset
-        """
+        def __len__(self):
+            
             return self.num_batches
+        
     
         def __getitem__(self, index):
-        """
-        Returns a mini-batch at given index containing X
-        Args:
-            index(int): index of the mini-batch
-        Returns:
-            X: spatio-temporal coordinates x,y,t concatenated
-        """
+            
             # Generate batch with residual points
             x_values = (
                 self.x_values[index * self.batch_size: (index + 1) * self.batch_size])
@@ -357,7 +345,7 @@ def derivatives(x_values, u_values):
     #u_zz = [u_zx, u_zz, u_yt]
     u_zz_values = u_zz_values[:, 1].reshape(u_values.shape)
     #u-tt = [u_tx, u_tz ,u_tt]
-     u_tt_values = u_tt_values[:, 2].reshape(u_values.shape)
+    u_tt_values = u_tt_values[:, 2].reshape(u_values.shape)
         
     x_values, z_values, t_values, x_indices, y_indices = x_values.T
     x_values = x_values.reshape(u_values.shape)
